@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  # The main application service
+  womsoft:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - test-network
+      
+  # Chrome browser for Selenium tests
+  chrome:
+    image: selenium/standalone-chrome:latest
+    ports:
+      - "4444:4444"
+    shm_size: '2gb'
+    networks:
+      - test-network
+      
+  # Test runner service
+  selenium-tests:
+    build: 
+      context: .
+      dockerfile: Dockerfile.selenium
+    depends_on:
+      womsoft:
+        condition: service_healthy
+      chrome:
+        condition: service_started
+    environment:
+      - APP_URL=http://womsoft:8000
+      - SELENIUM_REMOTE_URL=http://chrome:4444/wd/hub
+    volumes:
+      - .:/app
+      - ./screenshots:/app/screenshots
+    networks:
+      - test-network
+    command: python -m pytest tests/ui/test_entry_form_remote.py -v
+
+networks:
+  test-network:
