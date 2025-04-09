@@ -8,12 +8,3 @@ services:
     volumes:
       - .:/app
     restart: unless-stopped
-    
-  # New test service
-  tests:
-    build: .
-    volumes:
-      - .:/app
-    command: pytest -v
-    depends_on:
-      - womsoft

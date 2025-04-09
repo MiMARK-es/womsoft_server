@@ -23,7 +23,11 @@ services:
     image: selenium/standalone-chrome:latest
     ports:
       - "4444:4444"
+      - "5900:5900"  # VNC port for viewing
+      - "7900:7900"  # noVNC HTML interface
     shm_size: '2gb'
+    environment:
+      - VNC_NO_PASSWORD=1
     networks:
       - test-network
       
@@ -42,10 +46,9 @@ services:
       - SELENIUM_REMOTE_URL=http://chrome:4444/wd/hub
     volumes:
       - .:/app
-      - ./screenshots:/app/screenshots
     networks:
       - test-network
-    command: python -m pytest tests/ui/test_entry_form_remote.py -v
+    command: pytest -v -m "selenium"  # This is the correct command to run tests with the selenium marker
 
 networks:
   test-network:

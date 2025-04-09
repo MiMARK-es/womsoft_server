@@ -46,16 +46,16 @@
                 <div class="form-text">Enter a unique identifier for this diagnostic entry.</div>
             </div>
             <div class="mb-3">
-                <label for="agrin" class="form-label">Agrin Value</label>
-                <input type="number" step="0.01" class="form-control" id="agrin" name="agrin" required>
+                <label for="protein1" class="form-label">Protein1 Value</label>
+                <input type="number" step="0.01" class="form-control" id="protein1" name="protein1" required>
             </div>
             <div class="mb-3">
-                <label for="timp2" class="form-label">TIMP2 Value</label>
-                <input type="number" step="0.01" class="form-control" id="timp2" name="timp2" required>
+                <label for="protein2" class="form-label">Protein2 Value</label>
+                <input type="number" step="0.01" class="form-control" id="protein2" name="protein2" required>
             </div>
             <div class="mb-3">
-                <label for="mmp9" class="form-label">MMP9 Value</label>
-                <input type="number" step="0.01" class="form-control" id="mmp9" name="mmp9" required>
+                <label for="protein3" class="form-label">Protein3 Value</label>
+                <input type="number" step="0.01" class="form-control" id="protein3" name="protein3" required>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -73,9 +73,9 @@
             
             const formData = {
                 identifier: document.getElementById('identifier').value,
-                agrin: parseFloat(document.getElementById('agrin').value),
-                timp2: parseFloat(document.getElementById('timp2').value),
-                mmp9: parseFloat(document.getElementById('mmp9').value)
+                protein1: parseFloat(document.getElementById('protein1').value),
+                protein2: parseFloat(document.getElementById('protein2').value),
+                protein3: parseFloat(document.getElementById('protein3').value)
             };
             
             const successMessage = document.getElementById('success-message');

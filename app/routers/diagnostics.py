@@ -12,7 +12,7 @@ import string
 
 router = APIRouter(prefix="/api/diagnostics", tags=["diagnostics"])
 
-def calculate_diagnostic_result(agrin, timp2, mmp9):
+def calculate_diagnostic_result(protein1, protein2, protein3):
     # Dummy logic - all diagnostics are positive for now
     # You can replace this later with your actual diagnostic algorithm
     return "Positive"
@@ -39,16 +39,16 @@ def create_diagnostic(
     
     # Calculate diagnostic result (currently dummy logic)
     result = calculate_diagnostic_result(
-        diagnostic.agrin, 
-        diagnostic.timp2, 
-        diagnostic.mmp9
+        diagnostic.protein1, 
+        diagnostic.protein2, 
+        diagnostic.protein3
     )
     
     db_diagnostic = Diagnostic(
         identifier=diagnostic.identifier,
-        agrin=diagnostic.agrin,
-        timp2=diagnostic.timp2,
-        mmp9=diagnostic.mmp9,
+        protein1=diagnostic.protein1,
+        protein2=diagnostic.protein2,
+        protein3=diagnostic.protein3,
         result=result,
         user_id=current_user.id
     )

@@ -3,12 +3,12 @@ from datetime import datetime
 from typing import Optional
 
 class DiagnosticBase(BaseModel):
-    agrin: float
-    timp2: float
-    mmp9: float
+    protein1: float
+    protein2: float
+    protein3: float
 
 class DiagnosticCreate(DiagnosticBase):
-    identifier: str  # Added identifier field to be provided by user
+    identifier: str
 
 class Diagnostic(DiagnosticBase):
     id: int

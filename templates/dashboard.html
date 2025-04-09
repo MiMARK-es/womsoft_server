@@ -39,9 +39,9 @@
                     <tr>
                         <th>ID</th>
                         <th>Date</th>
-                        <th>Agrin</th>
-                        <th>TIMP2</th>
-                        <th>MMP9</th>
+                        <th>Protein1</th>
+                        <th>Protein2</th>
+                        <th>Protein3</th>
                         <th>Result</th>
                         <th>Actions</th>
                     </tr>
@@ -116,9 +116,9 @@
                     row.innerHTML = `
                         <td><span class="badge bg-secondary">${item.identifier}</span></td>
                         <td>${date}</td>
-                        <td>${item.agrin}</td>
-                        <td>${item.timp2}</td>
-                        <td>${item.mmp9}</td>
+                        <td>${item.protein1}</td>
+                        <td>${item.protein2}</td>
+                        <td>${item.protein3}</td>
                         <td><span class="badge ${resultClass}">${item.result}</span></td>
                         <td>
                             <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${item.id}">

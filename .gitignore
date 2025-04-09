@@ -52,6 +52,5 @@ ENV/
 *.swo
 
 # Screenshots from tests
-screenshots/
-*.png
-page_source.html
+screenshots/*.png
+screenshots/page_source.html
