@@ -1,0 +1,54 @@
+{
+  "login": {
+    "request": {
+      "method": "POST",
+      "url": "/api/v1/auth/login",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "testuser",
+        "password": "securepassword"
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "status": "success",
+        "data": {
+          "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "token_type": "bearer"
+        }
+      }
+    }
+  },
+  "refresh_token": {
+    "request": {
+      "method": "POST",
+      "url": "/api/v1/auth/refresh",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "status": "success",
+        "data": {
+          "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "token_type": "bearer"
+        }
+      }
+    }
+  }
+}

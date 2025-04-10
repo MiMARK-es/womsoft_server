@@ -1,0 +1,76 @@
+{
+  "submit_diagnostic": {
+    "request": {
+      "method": "POST",
+      "url": "/api/v1/diagnostics",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      },
+      "body": {
+        "patient_id": "P123456",
+        "age": 45,
+        "gender": "female",
+        "protein1_value": 1.23,
+        "protein2_value": 4.56,
+        "protein3_value": 7.89
+      }
+    },
+    "response": {
+      "status": 201,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "status": "success",
+        "data": {
+          "diagnostic_id": "D789012",
+          "result": "Positive",
+          "confidence": 0.92,
+          "recommendation": "Recommend follow-up within 30 days",
+          "timestamp": "2025-04-09T10:23:54Z"
+        }
+      }
+    }
+  },
+  "get_diagnostics": {
+    "request": {
+      "method": "GET",
+      "url": "/api/v1/diagnostics?page=1&limit=10&patient_id=P123456",
+      "headers": {
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "status": "success",
+        "data": {
+          "items": [
+            {
+              "diagnostic_id": "D789012",
+              "patient_id": "P123456",
+              "result": "Positive",
+              "confidence": 0.92,
+              "timestamp": "2025-04-09T10:23:54Z"
+            },
+            {
+              "diagnostic_id": "D789010",
+              "patient_id": "P123456",
+              "result": "Negative",
+              "confidence": 0.88,
+              "timestamp": "2025-04-05T14:30:12Z"
+            }
+          ],
+          "total": 2,
+          "page": 1,
+          "limit": 10,
+          "pages": 1
+        }
+      }
+    }
+  }
+}
