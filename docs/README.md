@@ -10,15 +10,18 @@ This folder contains technical documentation for the WomSoft Server project. Thi
 - **[Deployment Guides](./deployment/)**: Deployment procedures and environment configurations
 - **[Testing Documentation](./testing/)**: Testing strategies and guidelines
 
-## Relationship to QMS Documentation
+<!-- Removed this until further notice -->
+<!--
+## Relationship to QMS Documentation 
 
 This technical documentation supports the formal documentation maintained in the QMS:
 
-- **Software Development Plan**: <!-- TODO: Add SDP document ID from QMS -->
-- **Software Requirements Specification**: <!-- TODO: Add SRS document ID from QMS -->
-- **Software Architecture Document**: <!-- TODO: Add SAD document ID from QMS -->
+- **Software Development Plan**: 
+- **Software Requirements Specification**: 
+- **Software Architecture Document**: 
 
 For regulatory purposes, always refer to the official documents in the QMS.
+-->
 
 ## Updating Documentation
 
