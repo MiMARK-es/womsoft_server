@@ -53,4 +53,4 @@ ENV/
 
 # Screenshots from tests
 screenshots/*.png
-screenshots/page_source.html
+screenshots/page_source.html.pytest_cache/
