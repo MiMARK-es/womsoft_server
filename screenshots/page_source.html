@@ -1,0 +1,262 @@
+<html><head>
+    <title>WomSoft - Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <!-- Include shared navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/dashboard">WomSoft</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" id="nav-dashboard" href="/dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-entry" href="/entry">New Entry</a>
+                </li>
+                <!-- Admin section - will be shown/hidden based on permissions -->
+                <li class="nav-item admin-only">
+                    <a class="nav-link" id="nav-audit" href="/admin/audit">Audit Logs</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="logout-btn">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Set active nav item based on current URL
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if user has admin rights
+        checkAdminRights();
+        
+        // Set active navigation item
+        const currentPath = window.location.pathname;
+        
+        if (currentPath === '/dashboard') {
+            document.getElementById('nav-dashboard').classList.add('active');
+        } else if (currentPath === '/entry') {
+            document.getElementById('nav-entry').classList.add('active');
+        } else if (currentPath === '/admin/audit') {
+            document.getElementById('nav-audit').classList.add('active');
+        }
+    });
+    
+    // Check if current user is admin and show admin options
+    function checkAdminRights() {
+        if (!localStorage.getItem('token')) {
+            window.location.href = '/';
+            return;
+        }
+        
+        fetch('/api/admin/check-access', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Show admin items if user has access
+                document.querySelectorAll('.admin-only').forEach(item => {
+                    item.classList.remove('d-none');
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error checking admin rights:', error);
+        });
+    }
+    
+    // Handle logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        window.location.href = '/';
+    });
+</script>
+
+    <div class="container mt-4">
+        <h2>Your Diagnostic History</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Protein1</th>
+                        <th>Protein2</th>
+                        <th>Protein3</th>
+                        <th>Result</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="diagnostics-table-body"><tr>
+                        <td><span class="badge bg-secondary">ASD</span></td>
+                        <td>4/28/2025, 9:08:21 AM</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td><span class="badge bg-danger">Positive</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger delete-btn" data-id="1">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr><tr>
+                        <td><span class="badge bg-secondary">TEST-SELENIUM-1745831857</span></td>
+                        <td>4/28/2025, 9:17:37 AM</td>
+                        <td>1.23</td>
+                        <td>2.34</td>
+                        <td>3.45</td>
+                        <td><span class="badge bg-danger">Positive</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger delete-btn" data-id="2">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this diagnostic entry? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Check if user is authenticated
+        if (!localStorage.getItem('token')) {
+            window.location.href = '/';
+        }
+
+        // Store for the current entry to be deleted
+        let currentDiagnosticToDelete = null;
+        
+        // Initialize delete confirmation modal
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+        
+        // Load diagnostics data
+        async function loadDiagnostics() {
+            try {
+                const response = await fetch('/api/diagnostics', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (response.status === 401) {
+                    // Token expired or invalid
+                    localStorage.removeItem('token');
+                    window.location.href = '/';
+                    return;
+                }
+                
+                const diagnostics = await response.json();
+                const tableBody = document.getElementById('diagnostics-table-body');
+                
+                tableBody.innerHTML = '';
+                
+                diagnostics.forEach(item => {
+                    const row = document.createElement('tr');
+                    const date = new Date(item.timestamp).toLocaleString();
+                    
+                    // Create a badge for result with appropriate coloring
+                    const resultClass = item.result === 'Positive' ? 'bg-danger' : 'bg-success';
+                    
+                    row.innerHTML = `
+                        <td><span class="badge bg-secondary">${item.identifier}</span></td>
+                        <td>${date}</td>
+                        <td>${item.protein1}</td>
+                        <td>${item.protein2}</td>
+                        <td>${item.protein3}</td>
+                        <td><span class="badge ${resultClass}">${item.result}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${item.id}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+                
+                if (diagnostics.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="7" class="text-center">No diagnostic data available</td></tr>';
+                }
+                
+                // Add event listeners to delete buttons
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        currentDiagnosticToDelete = this.getAttribute('data-id');
+                        deleteModal.show();
+                    });
+                });
+                
+            } catch (error) {
+                console.error('Error loading diagnostics:', error);
+            }
+        }
+
+        // Handle confirmation of deletion
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+            if (!currentDiagnosticToDelete) return;
+            
+            try {
+                const response = await fetch(`/api/diagnostics/${currentDiagnosticToDelete}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/';
+                    return;
+                }
+                
+                if (response.ok) {
+                    // Hide modal and refresh data
+                    deleteModal.hide();
+                    loadDiagnostics();
+                } else {
+                    console.error('Error deleting entry:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error deleting entry:', error);
+            }
+            
+            // Reset the current diagnostic ID
+            currentDiagnosticToDelete = null;
+        });
+
+        // Load data on page load
+        loadDiagnostics();
+    </script>
+
+</body></html>
