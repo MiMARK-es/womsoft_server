@@ -45,15 +45,15 @@ class TestAuditLogsUI:
         # Teardown
         driver.quit()
     
-    def test_admin_can_access_audit_logs(self, driver):
+    def test_admin_can_access_audit_logs(self, driver, admin_user):
         """Test that admin users can access the audit logs page"""
         # 1. Login as admin
         driver.get(f"{APP_URL}/")
         print(f"Opened URL: {APP_URL}")
         
         # Fill in admin credentials
-        driver.find_element(By.ID, "username").send_keys("admin")
-        driver.find_element(By.ID, "password").send_keys("admin")
+        driver.find_element(By.ID, "username").send_keys("adminuser")
+        driver.find_element(By.ID, "password").send_keys("admin123")
         driver.find_element(By.ID, "login-form").submit()
         print("Submitted login form")
         
@@ -96,12 +96,12 @@ class TestAuditLogsUI:
         audit_table = driver.find_element(By.ID, "audit-logs-table-body")
         assert audit_table is not None
     
-    def test_audit_logs_filtering(self, driver):
+    def test_audit_logs_filtering(self, driver, admin_user):
         """Test that audit logs filtering works correctly"""
         # 1. Login as admin
         driver.get(f"{APP_URL}/")
-        driver.find_element(By.ID, "username").send_keys("admin")
-        driver.find_element(By.ID, "password").send_keys("admin")
+        driver.find_element(By.ID, "username").send_keys("adminuser")
+        driver.find_element(By.ID, "password").send_keys("admin123")
         driver.find_element(By.ID, "login-form").submit()
         
         # Wait for dashboard to load
@@ -129,8 +129,8 @@ class TestAuditLogsUI:
         )
         
         # Login again
-        driver.find_element(By.ID, "username").send_keys("admin")
-        driver.find_element(By.ID, "password").send_keys("admin")
+        driver.find_element(By.ID, "username").send_keys("adminuser")
+        driver.find_element(By.ID, "password").send_keys("admin123")
         driver.find_element(By.ID, "login-form").submit()
         
         # Wait for dashboard

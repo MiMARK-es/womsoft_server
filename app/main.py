@@ -9,6 +9,7 @@ from app.routers.admin import router as admin_router  # Add this import
 from app.middleware.audit_middleware import AuditMiddleware  # Add this import
 from app.models.user import User
 from app.auth.jwt import get_password_hash
+from app.database import TEST_MODE
 
 # Create tables
 Base.metadata.create_all(bind=engine)
@@ -55,7 +56,7 @@ async def admin_audit(request: Request):
 async def startup_event():
     db = next(get_db())
     user_count = db.query(User).count()
-    if user_count == 0:
+    if user_count == 0 and not TEST_MODE:
         admin_user = User(
             username="admin",
             email="admin@mimark.es",

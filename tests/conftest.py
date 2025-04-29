@@ -20,7 +20,6 @@ logger = logging.getLogger(__name__)
 os.environ["JWT_SECRET_KEY"] = SECRET_KEY  # Ensure tests use the same secret as the app
 os.environ["JWT_ACCESS_TOKEN_EXPIRE_MINUTES"] = str(ACCESS_TOKEN_EXPIRE_MINUTES)
 
-# Use in-memory SQLite database for testing
 SQLALCHEMY_DATABASE_URL ="sqlite:///./womec_test.db"
 
 engine = create_engine(
@@ -39,7 +38,6 @@ def setup_test_db():
 @pytest.fixture(scope="function")
 def db_engine():
     """Create a SQLAlchemy engine for tests"""
-    # Use in-memory database for faster tests
     engine = create_engine(
         SQLALCHEMY_DATABASE_URL,
         connect_args={"check_same_thread": False}

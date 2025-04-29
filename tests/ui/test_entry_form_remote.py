@@ -12,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 pytestmark = pytest.mark.selenium
 
 # Use environment variables for configuration
-APP_URL = os.environ.get("APP_URL", "http://womsoft:8000")
+APP_URL = os.environ.get("APP_URL", "http://0.0.0.0:8000")
 SELENIUM_URL = os.environ.get("SELENIUM_REMOTE_URL", "http://chrome:4444/wd/hub")
 
 class TestEntryForm:
@@ -44,11 +44,11 @@ class TestEntryForm:
             
         # Save screenshot on failure
         try:
-            driver.save_screenshot("/app/screenshots/error_screenshot.png")
+            driver.save_screenshot("/screenshots/error_screenshot.png")
             print("Screenshot saved as error_screenshot.png")
             
             # Print page source for debugging
-            with open("/app/screenshots/page_source.html", "w") as f:
+            with open("/screenshots/page_source.html", "w") as f:
                 f.write(driver.page_source)
             print("Page source saved as page_source.html")
         except Exception as e:
@@ -57,7 +57,7 @@ class TestEntryForm:
         # Teardown
         driver.quit()
     
-    def test_entry_form_submission(self, driver):
+    def test_entry_form_submission(self, driver, admin_user):
         """
         Test the entry form submission process
         """
@@ -66,8 +66,8 @@ class TestEntryForm:
         print(f"Opened URL: {APP_URL}")
         
         # Fill in login credentials
-        driver.find_element(By.ID, "username").send_keys("admin")
-        driver.find_element(By.ID, "password").send_keys("admin")
+        driver.find_element(By.ID, "username").send_keys("adminuser")
+        driver.find_element(By.ID, "password").send_keys("admin123")
         driver.find_element(By.ID, "login-form").submit()
         print("Submitted login form")
         
@@ -78,7 +78,7 @@ class TestEntryForm:
         print(f"Dashboard loaded: {driver.current_url}")
         
         # Save a screenshot for debugging
-        driver.save_screenshot("/app/screenshots/dashboard.png")
+        driver.save_screenshot("/screenshots/dashboard.png")
         print("Saving dashboard screenshot")
         
         # 2. Navigate to entry form - try with more robust selectors
@@ -118,7 +118,7 @@ class TestEntryForm:
         print("Entry form loaded")
         
         # Save a screenshot of the form
-        driver.save_screenshot("/app/screenshots/entry_form.png")
+        driver.save_screenshot("/screenshots/entry_form.png")
         
         # 3. Fill out the form with test data
         test_id = f"TEST-SELENIUM-{int(time.time())}"
