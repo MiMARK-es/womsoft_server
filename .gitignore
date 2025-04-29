@@ -25,6 +25,7 @@ var/
 
 # Logs
 logs/
+screenshots/
 *.log
 
 # Unit test / coverage reports
@@ -53,4 +54,4 @@ ENV/
 
 # Screenshots from tests
 screenshots/*.png
-screenshots/page_source.html
+screenshots/page_source.html.pytest_cache/

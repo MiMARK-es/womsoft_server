@@ -1,0 +1,77 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/dashboard">WomSoft</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-dashboard" href="/dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-entry" href="/entry">New Entry</a>
+                </li>
+                <!-- Admin section - will be shown/hidden based on permissions -->
+                <li class="nav-item admin-only d-none">
+                    <a class="nav-link" id="nav-audit" href="/admin/audit">Audit Logs</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="logout-btn">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Set active nav item based on current URL
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if user has admin rights
+        checkAdminRights();
+        
+        // Set active navigation item
+        const currentPath = window.location.pathname;
+        
+        if (currentPath === '/dashboard') {
+            document.getElementById('nav-dashboard').classList.add('active');
+        } else if (currentPath === '/entry') {
+            document.getElementById('nav-entry').classList.add('active');
+        } else if (currentPath === '/admin/audit') {
+            document.getElementById('nav-audit').classList.add('active');
+        }
+    });
+    
+    // Check if current user is admin and show admin options
+    function checkAdminRights() {
+        if (!localStorage.getItem('token')) {
+            window.location.href = '/';
+            return;
+        }
+        
+        fetch('/api/admin/check-access', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Show admin items if user has access
+                document.querySelectorAll('.admin-only').forEach(item => {
+                    item.classList.remove('d-none');
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error checking admin rights:', error);
+        });
+    }
+    
+    // Handle logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        window.location.href = '/';
+    });
+</script>
