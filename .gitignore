@@ -25,6 +25,7 @@ var/
 
 # Logs
 logs/
+screenshots/
 *.log
 
 # Unit test / coverage reports

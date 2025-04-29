@@ -44,6 +44,8 @@ services:
     environment:
       - APP_URL=http://womsoft:8000
       - SELENIUM_REMOTE_URL=http://chrome:4444/wd/hub
+      - PYTHONUNBUFFERED=1
+      - TEST_MODE=true
     volumes:
       - .:/app
     networks:

@@ -21,7 +21,7 @@ os.environ["JWT_SECRET_KEY"] = SECRET_KEY  # Ensure tests use the same secret as
 os.environ["JWT_ACCESS_TOKEN_EXPIRE_MINUTES"] = str(ACCESS_TOKEN_EXPIRE_MINUTES)
 
 # Use in-memory SQLite database for testing
-SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
+SQLALCHEMY_DATABASE_URL ="sqlite:///./womec_test.db"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
@@ -41,7 +41,7 @@ def db_engine():
     """Create a SQLAlchemy engine for tests"""
     # Use in-memory database for faster tests
     engine = create_engine(
-        "sqlite:///./womec_test.db",
+        SQLALCHEMY_DATABASE_URL,
         connect_args={"check_same_thread": False}
     )
     
