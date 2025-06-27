@@ -6,6 +6,7 @@ from app.database import engine, Base, get_db
 from app.auth.router import router as auth_router
 from app.routers.diagnostics import router as diagnostics_router
 from app.routers.admin import router as admin_router  # Add this import
+from app.routers.orders import router as orders_router
 from app.middleware.audit_middleware import AuditMiddleware  # Add this import
 from app.models.user import User
 from app.auth.jwt import get_password_hash
@@ -29,6 +30,7 @@ templates = Jinja2Templates(directory="templates")
 app.include_router(auth_router)
 app.include_router(diagnostics_router)
 app.include_router(admin_router)  # Add this line
+app.include_router(orders_router)
 
 # Root route
 @app.get("/")
