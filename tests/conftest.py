@@ -91,7 +91,8 @@ def admin_user(db_session):
         id=1,  # Force ID 1 for admin
         username="adminuser",
         email="admin@example.com",
-        hashed_password=get_password_hash("admin123")
+        hashed_password=get_password_hash("admin123"),
+        role="admin"
     )
     db_session.add(admin)
     db_session.flush()
@@ -105,12 +106,26 @@ def test_user(db_session, admin_user):  # Make this depend on admin_user
     user = User(
         username="testuser",
         email="test@example.com",
-        hashed_password=get_password_hash("password123")
+        hashed_password=get_password_hash("password123"),
+        role="doctor"
     )
     db_session.add(user)
     db_session.flush()
     db_session.commit()
     logger.info(f"Created test user: {user.username}, ID: {user.id}")
+    return user
+
+@pytest.fixture(scope="function")
+def labtech_user(db_session, admin_user):
+    user = User(
+        username="labtech",
+        email="labtech@example.com",
+        hashed_password=get_password_hash("labpass"),
+        role="labtech"
+    )
+    db_session.add(user)
+    db_session.flush()
+    db_session.commit()
     return user
 
 @pytest.fixture(scope="function")
@@ -120,6 +135,22 @@ def token_headers(client, test_user):
         "username": "testuser",
         "password": "password123"
     }
+    response = client.post("/api/auth/login", data=login_data)
+    token = response.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture(scope="function")
+def doctor_token_headers(client, test_user):
+    login_data = {"username": "testuser", "password": "password123"}
+    response = client.post("/api/auth/login", data=login_data)
+    token = response.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture(scope="function")
+def labtech_token_headers(client, labtech_user):
+    login_data = {"username": "labtech", "password": "labpass"}
     response = client.post("/api/auth/login", data=login_data)
     token = response.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
